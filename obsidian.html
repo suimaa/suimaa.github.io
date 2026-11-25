@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Obsidian で開く</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Obsidian で開く</h1>
+    <p class="lead" id="status">Obsidian でノートを開いています…</p>
+    <p><a id="open" href="#" hidden>Obsidian で開く</a></p>
+    <p>Notion の目録から、自分の Obsidian の保管庫のノートを開くための中継のページです。Notion は <code>obsidian://</code> のリンクを開かないので、このページを通します。</p>
+    <ul>
+      <li>開く先（保管庫とノートの名前）は、リンクの <code>#</code> の後ろにだけあります。<code>#</code> の後ろは、このサイトのサーバーには送られません。</li>
+      <li>開くのは、自分のパソコンの Obsidian の <code>obsidian://open</code> だけです。ほかの所へは移りません。</li>
+      <li>はじめて開くとき、ブラウザが「Obsidian を開きますか」と聞きます。許可すると開きます。</li>
+    </ul>
+  </main>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.hash.slice(1));
+      var vault = params.get("vault");
+      var file = params.get("file");
+      var status = document.getElementById("status");
+      if (!vault || !file) {
+        status.textContent = "開くノートが分かりません（リンクの # の後ろに vault と file が要ります）。";
+        return;
+      }
+      var target = "obsidian://open?vault=" + encodeURIComponent(vault) + "&file=" + encodeURIComponent(file);
+      var link = document.getElementById("open");
+      link.href = target;
+      link.hidden = false;
+      status.textContent = "Obsidian で「" + file.split("/").pop() + "」を開いています。開かないときは、下のリンクを押してください。";
+      location.replace(target);
+    })();
+  </script>
+</body>
+</html>
